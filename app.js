@@ -8,7 +8,7 @@ const app = express();
 // Configurar CORS corretamente para enviar cookies
 app.use(cors({
   origin: [
-    "http://localhost:8081",
+    "https://sortepremiada-eight.vercel.app",
     
   ],
   credentials: true
