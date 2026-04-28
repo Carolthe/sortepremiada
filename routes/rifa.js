@@ -22,17 +22,22 @@ router.get("/numeros", async (req, res) => {
 // POST /api/rifa/compras  — cria compra + reserva números
 // ─────────────────────────────────────────────────────────────────────────────
 router.post("/compras", autenticar, async (req, res) => {
+  const conn = await db.getConnection();
   try {
+    await conn.beginTransaction();
+
     const { total_numeros, valor_total, numeros } = req.body;
     const id_usuario = req.usuario.id_usuario;
 
     if (!total_numeros || !valor_total || !numeros?.length) {
+      await conn.rollback();
+      conn.release();
       return res.status(400).json({ erro: "Dados incompletos" });
     }
 
-    // 1. Verifica números já ocupados
+    // 1. Verifica se algum número já está reservado ou vendido
     const placeholders = numeros.map(() => "?").join(",");
-    const [jaOcupados] = await db.query(
+    const [jaOcupados] = await conn.query(
       `SELECT numero FROM numeros_rifa
         WHERE numero IN (${placeholders})
           AND status != 'disponivel'`,
@@ -40,44 +45,50 @@ router.post("/compras", autenticar, async (req, res) => {
     );
 
     if (jaOcupados.length > 0) {
+      await conn.rollback();
+      conn.release();
       const ocupados = jaOcupados.map((r) => r.numero).join(", ");
       return res.status(409).json({
-        erro: `Números já reservados ou vendidos: ${ocupados}`,
+        erro: `Os seguintes números já foram reservados ou vendidos: ${ocupados}`,
       });
     }
 
     // 2. Cria a compra
-    const [result] = await db.query(
-      `INSERT INTO compras (id_usuario, total_numeros, valor_total, status, data_compra)
-       VALUES (?, ?, ?, 'reservado', NOW())`,
+    const [result] = await conn.query(
+      `INSERT INTO compras (id_usuario, total_numeros, valor_total, data_compra)
+       VALUES (?, ?, ?, NOW())`,
       [id_usuario, total_numeros, valor_total]
     );
     const id_compra = result.insertId;
 
-    // 3. Insere compra_numeros e reserva
+    // 3. Insere em compra_numeros e reserva os números
     for (const numero of numeros) {
-      const [num] = await db.query(
+      const [num] = await conn.query(
         "SELECT id_numero FROM numeros_rifa WHERE numero = ?",
         [numero]
       );
       if (num.length > 0) {
         const id_numero = num[0].id_numero;
 
-        await db.query(
+        await conn.query(
           "INSERT INTO compra_numeros (id_compra, id_numero) VALUES (?, ?)",
           [id_compra, id_numero]
         );
 
-        await db.query(
+        await conn.query(
           "UPDATE numeros_rifa SET status = 'reservado' WHERE id_numero = ?",
           [id_numero]
         );
       }
     }
 
-    res.json({ id_compra });
+    await conn.commit();
+    conn.release();
 
+    res.json({ id_compra });
   } catch (error) {
+    await conn.rollback();
+    conn.release();
     console.error("Erro ao criar compra:", error);
     res.status(500).json({ erro: "Erro ao criar compra" });
   }
