@@ -1,13 +1,13 @@
-const express    = require("express");
-const router     = express.Router();
-const db         = require("../models/db");
+const express = require("express");
+const router = express.Router();
+const db = require("../models/db");
 const autenticar = require("../middleware/auth");
 
 // POST /api/apostas/pagar
 router.post("/pagar", autenticar, async (req, res) => { // ✅ autenticar adicionado aqui
   try {
-     console.log("BODY RECEBIDO:", req.body); // ✅ adicione esta linha
-  console.log("USUARIO TOKEN:", req.usuario); // ✅ e esta
+    console.log("BODY RECEBIDO:", req.body); // ✅ adicione esta linha
+    console.log("USUARIO TOKEN:", req.usuario); // ✅ e esta
     const { id_compra, chavepix_dono, nome_titular } = req.body;
     const id_usuario = req.usuario.id_usuario; // ✅ vem do token
 
@@ -41,7 +41,7 @@ router.get("/qrcode-pix", async (req, res) => {
 
     return res.json({
       chave_pix: rows[0].chave_pix,
-      qr_code:   rows[0].qr_code,
+      qr_code: rows[0].qr_code,
     });
   } catch (error) {
     console.error("Erro ao buscar PIX:", error);

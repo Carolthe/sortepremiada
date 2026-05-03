@@ -1,10 +1,10 @@
-const express      = require("express");
-const router       = express.Router();
-const db           = require("../models/db");
-const bcrypt       = require("bcryptjs");
-const jwt          = require("jsonwebtoken");
-const nodemailer   = require("nodemailer");
-const autenticar   = require("../middleware/auth");
+const express = require("express");
+const router = express.Router();
+const db = require("../models/db");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const autenticar = require("../middleware/auth");
 
 const JWT_SECRET = process.env.JWT_SECRET || "segredo_dev";
 
@@ -101,10 +101,10 @@ router.post("/login", async (req, res) => {
       message: "Login realizado!",
       token,
       usuario: {
-        id_usuario:  usuario.id_usuario,
-        nome:        usuario.nome,
-        email:       usuario.email,
-        telefone:    usuario.telefone,
+        id_usuario: usuario.id_usuario,
+        nome: usuario.nome,
+        email: usuario.email,
+        telefone: usuario.telefone,
         pix_receber: usuario.pix_receber,
       },
     });
@@ -184,8 +184,8 @@ router.post("/recuperar-senha", async (req, res) => {
       return res.json({ message: "Se o email existir, um código será enviado" });
     }
 
-    const codigo  = gerarCodigo();
-    const expira  = new Date(Date.now() + 15 * 60 * 1000); // 15 min
+    const codigo = gerarCodigo();
+    const expira = new Date(Date.now() + 15 * 60 * 1000); // 15 min
 
     await db.query(
       `UPDATE usuarios
@@ -196,8 +196,8 @@ router.post("/recuperar-senha", async (req, res) => {
     );
 
     await transporter.sendMail({
-      from:    `"SortePremiada" <${process.env.EMAIL_USER}>`,
-      to:      email,
+      from: `"SortePremiada" <${process.env.EMAIL_USER}>`,
+      to: email,
       subject: "Código de recuperação de senha",
       html: `
         <div style="font-family:sans-serif;max-width:400px;margin:auto;">

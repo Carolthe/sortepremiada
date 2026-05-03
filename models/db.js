@@ -5,15 +5,15 @@ const db = mysql.createPool(process.env.MYSQL_URL);
 module.exports = db;
 
 // const db = mysql.createPool({
-//   // host: process.env.DB_HOST,
-//   // user: process.env.DB_USER,
-//   // password: process.env.DB_PASS,
-//   // database: process.env.DB_NAME,
-//   uri: process.env.MYSQL_URL,
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASS,
+//   database: process.env.DB_NAME,
+// //   uri: process.env.MYSQL_URL,
 //   waitForConnections: true,
 //   connectionLimit: 10,
 //   queueLimit: 0
 
 // });
 
-// module.exports = db;
+module.exports = db;
