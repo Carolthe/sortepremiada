@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const autenticar = require("../middleware/auth");
 
-const JWT_SECRET = process.env.JWT_SECRET || "segredo_dev";
+// const JWT_SECRET = process.env.JWT_SECRET || "segredo_dev";
+const JWT_SECRET = require("../config/jwt");
 
 // ── Nodemailer ────────────────────────────────────────────────────────────────
 const transporter = nodemailer.createTransport({
