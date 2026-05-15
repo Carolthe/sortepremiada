@@ -71,8 +71,8 @@ router.post("/compras", autenticar, async (req, res) => {
         const id_numero = num[0].id_numero;
 
         await conn.query(
-          "INSERT INTO compra_numeros (id_compra, id_numero) VALUES (?, ?)",
-          [id_compra, id_numero]
+          "INSERT INTO compra_numeros (id_compra, id_numero, id_usuario) VALUES (?, ?, ?)",
+          [id_compra, id_numero, id_usuario]
         );
 
         await conn.query(
