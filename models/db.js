@@ -1,10 +1,30 @@
+// const mysql = require("mysql2/promise");
+
+// const db = mysql.createPool({
+//   uri: process.env.MYSQL_URL
+// });
+
+// module.exports = db;
+
+
 const mysql = require("mysql2/promise");
 
 const db = mysql.createPool({
-  uri: process.env.MYSQL_URL
+  host: process.env.MYSQLHOST,
+  port: process.env.MYSQLPORT,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE
 });
 
 module.exports = db;
+
+
+
+
+
+
+// Conexão local
 
 // const db = mysql.createPool({
 //   host: process.env.DB_HOST,

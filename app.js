@@ -8,6 +8,8 @@ const app = express();
 // Configurar CORS corretamente para enviar cookies
 app.use(cors({
   origin: [
+// //Rota local
+//     "http://localhost:8081",
 // Rota produção
     "https://sortepremiada-eight.vercel.app"
   ],
