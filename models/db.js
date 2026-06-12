@@ -35,7 +35,7 @@ const db = mysql.createPool({
 
 // console.log('✅ MySQL conectado!');
 
-// module.exports = db;
+module.exports = db;
 
 
 
