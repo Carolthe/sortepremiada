@@ -9,7 +9,7 @@ const app = express();
 app.use(cors({
   origin: [
 // //Rota local
-//     "http://localhost:8081",
+    // "http://localhost:8081",
 // Rota produção
     "https://sortepremiada-eight.vercel.app"
   ],
@@ -24,6 +24,7 @@ app.use(express.json());
 app.use("/api/usuarios", require("./routes/usuario"));
 app.use("/api/rifa", require("./routes/rifa"))
 app.use("/api/apostas", require("./routes/apostas"))
+app.use("/api/grupo", require("./routes/grupo"))
 
 // Healthcheck Monitoramento 
 app.get("/health/db", async (req, res) => {
